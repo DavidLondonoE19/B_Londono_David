@@ -152,8 +152,8 @@
   <!-- ===================== Orbbec Astra (Parte 2) ===================== -->
   <!-- TODO: link "camara_link" (caja) con dimensiones y masa de la hoja de datos -->
 
-  <xacro:property name="camara_x" value="0.165"/>
-  <xacro:property name="camara_y" value="0.04"/>
+  <xacro:property name="camara_x" value="0.04"/>
+  <xacro:property name="camara_y" value="0.165"/>
   <xacro:property name="camara_z" value="0.048"/>
   <xacro:property name="camara_masa" value="0.310"/>
   
@@ -178,7 +178,7 @@
   <joint name="joint_camara" type="fixed">
     <parent link="base_link"/>
     <child link="camara_link"/>
-    <origin xyz="0.17 0 0.09" rpy="0 0 ${pi/2}"/>
+    <origin xyz="0.17 0 0.09" rpy="0 0 0"/>
   </joint>
   
 
@@ -189,7 +189,7 @@
   </link>
 
   <joint name="joint_camara_optica" type="fixed">
-    <parent link="camara_link"/>
+    <parent link="camara_link"/>  
     <child link="camara_optica_link"/>
     <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
   </joint>
