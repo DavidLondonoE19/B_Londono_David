@@ -96,7 +96,9 @@ class Cinematica(Node):
             return
 
         # TODO: calcular u, v, r con W y actualizar self.x, self.y, self.phi
-        u = v = r = 0.0
+        xi = self.W @ omega
+        u, v, r = float(xi[0]), float(xi[1]), float(xi[2])
+        self.x, self.y, self.phi = integrar(self.x, self.y, self.phi, u, v, r, dt)
 
         qz, qw = math.sin(self.phi / 2.0), math.cos(self.phi / 2.0)
         stamp = ahora.to_msg()

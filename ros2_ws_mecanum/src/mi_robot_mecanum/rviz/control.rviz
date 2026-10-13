@@ -10,6 +10,60 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
   # TODO (Parte 3): agregar RobotModel, TF, LaserScan, Image (RGB y profundidad),
   #   PointCloud2 y Odometry desde RViz y guardar aquí (File > Save Config As)
+
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Description Source: Topic
+      Description Topic:
+        Value: /robot_description
+        Depth: 5
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: false
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Enabled: true
+      Topic:
+        Value: /scan
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 3
+      Color Transformer: FlatColor
+      Color: 255; 0; 0
+    - Class: rviz_default_plugins/Image
+      Name: Image RGB
+      Enabled: true
+      Topic:
+        Value: /camara/image
+        Reliability Policy: Best Effort
+    - Class: rviz_default_plugins/Image
+      Name: Image Profundidad
+      Enabled: true
+      Topic:
+        Value: /camara/depth_image
+        Reliability Policy: Best Effort
+      Normalize Range: true
+    - Class: rviz_default_plugins/PointCloud2
+      Name: PointCloud2
+      Enabled: true
+      Topic:
+        Value: /camara/points
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 2
+      Color Transformer: RGB8
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: true
+      Topic:
+        Value: /odom
+        Reliability Policy: Reliable
+      Keep: 100
+
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
