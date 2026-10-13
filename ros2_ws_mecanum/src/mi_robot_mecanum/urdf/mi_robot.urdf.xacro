@@ -103,7 +103,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry><cylinder radius="${lidar_radio}" length="${lidar_ancho}"/></geometry>
-      <material name="azul"><color rgba="1 1 1 1"/></material>
+      <material name="blanco"><color rgba="1 1 1 1"/></material>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -159,53 +159,62 @@
   
   <link name="camara_link">
     <visual>
-      <origin xyz="0 0 0.02" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry><box size="${camara_x} ${camara_y} ${camara_z}"/></geometry>
       <material name="blanco"><color rgba="1 1 1 1"/></material>
     </visual>
     <collision>
-      <origin xyz="0 0 0.02" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry><box size="${camara_x} ${camara_y} ${camara_z}"/></geometry>
     </collision>
     <inertial>
-      <origin xyz="0 0 0.02" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <mass value="${camara_masa}"/>
       <xacro:inercia_caja m="${camara_masa}" x="${camara_x}" y="${camara_y}" z="${camara_z}"/>
     </inertial>
   </link>
 
-  <!-- TODO: joint fijo "joint_camara" base_link --> camara_link en la posición de su variante -->
+  <!-- TODO: joint fijo "joint_camara" base_link - camara_link en la posición de su variante -->
   <joint name="joint_camara" type="fixed">
     <parent link="base_link"/>
     <child link="camara_link"/>
-    <origin xyz="0.12 0 0.07" rpy="0 0 ${pi/2}"/>
+    <origin xyz="0.17 0 0.09" rpy="0 0 ${pi/2}"/>
   </joint>
   
 
   <!-- TODO: link "camara_optica_link" y joint fijo "joint_camara_optica" desde
        camara_link con rpy = (-π/2, 0, -π/2) (REP-103) -->
+  
+  <link name="camara_optica_link">
+  </link>
+
+  <joint name="joint_camara_optica" type="fixed">
+    <parent link="camara_link"/>
+    <child link="camara_optica_link"/>
+    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+  </joint>
 
   <gazebo reference="camara_link">
     <sensor name="astra" type="rgbd_camera">
       <topic>/camara</topic>
       <gz_frame_id>camara_link</gz_frame_id>
-      <update_rate>10</update_rate>
+      <update_rate>30</update_rate>
       <always_on>1</always_on>
       <camera>
-        <horizontal_fov>TODO</horizontal_fov>   <!-- en radianes -->
+        <horizontal_fov>1.01927228</horizontal_fov>   <!-- en radianes -->
         <image>
-          <width>TODO</width>
-          <height>TODO</height>
+          <width>640</width>
+          <height>480</height>
           <format>R8G8B8</format>
         </image>
         <clip>
-          <near>TODO</near>
-          <far>TODO</far>
+          <near>0.4</near>
+          <far>2</far>
         </clip>
         <depth_camera>
           <clip>
-            <near>TODO</near>
-            <far>TODO</far>
+            <near>0.4</near>
+            <far>2</far>
           </clip>
         </depth_camera>
       </camera>
@@ -225,9 +234,14 @@
 
   <gazebo>
     <xacro:motor prefijo="del_izq"/>
+    <xacro:motor prefijo="del_der"/>
+    <xacro:motor prefijo="tra_izq"/>
+    <xacro:motor prefijo="tra_der"/>
     <!-- TODO: motores de del_der, tra_izq y tra_der -->
 
     <!-- TODO: plugin gz-sim-joint-state-publisher-system (encoders) -->
+    <plugin filename="gz-sim-joint-state-publisher-system"
+        name="gz::sim::systems::JointStatePublisher"/>
   </gazebo>
 
 </robot>
