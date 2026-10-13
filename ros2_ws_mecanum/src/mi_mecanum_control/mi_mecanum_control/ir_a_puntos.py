@@ -10,7 +10,13 @@ Ley de la clase, ec. (21), con η̇d = 0 (set-point):
 
 ¿Cuánto vale J(φ) para un robot holonómico? ¿Necesita la fase de
 "girar en el sitio" que usaba ir_a_pose en el diferencial?
+
+J ES LA MATRIZ DE ROTACION DEL ROBOT, [c s 0], [-s c 0], [0 0 1]
+NO NECESITA FASE DE GIRAR EN EL SITIO PORQUE EL ROBOT ES HOLONOMICO, 
+POR LO QUE NO NECESITA LINEA OF SIGHT. PUEDE MOVERSE EN CUALQUIER SENTIDO EN CUALQUIER
+INSTANTE
 """
+from curses import meta
 import math
 
 import rclpy
@@ -20,7 +26,10 @@ from rclpy.node import Node
 
 # ===== TODO: puntos de SU variante: (x [m], y [m], θ [rad]) =====
 PUNTOS = [
-    # (x, y, theta),
+    (0.0, 1.5, 0.0),
+    (1.5, 1.5, -math.pi / 2),
+    (1.5, 0.0, math.pi),
+    (0.0, 0.0, 0.0),
 ]
 
 L1, L2, L3 = 1.0, 1.0, 1.5     # Λ = diag(λ1, λ2, λ3)
@@ -42,10 +51,34 @@ def ley_control(pose, meta):
     pose = (x, y, φ)      meta = (xd, yd, θd)
     Devuelve (u, v, r, alcanzado)
     """
+    x, y, phi = pose
+    xd, yd, thd = meta
+
     # TODO 1: errores de posición (en odom) y de orientación (envuelto)
+    ex = xd - x
+    ey = yd - y
+    eth = envolver(thd - phi)
+
     # TODO 2: ¿alcanzado? (TOL_POS y TOL_ANG) -> devolver 0, 0, 0, True
+    if math.hypot(ex, ey) < TOL_POS and abs(eth) < TOL_ANG:
+        return 0.0, 0.0, 0.0, True
+
     # TODO 3: ξ = J(φ)⁺ Λ e
+    gx, gy, gth = L1 * ex, L2 * ey, L3 * eth
+    c, s = math.cos(phi), math.sin(phi)
+    u = c * gx + s * gy
+    v = -s * gx + c * gy
+    r = gth
+
     # TODO 4: saturar la NORMA de (u, v) a V_MAX conservando la dirección, y |r| a R_MAX
+    norma = math.hypot(u, v)
+    if norma > V_MAX:
+        u *= V_MAX / norma
+        v *= V_MAX / norma
+    r = max(-R_MAX, min(R_MAX, r))
+
+    return u, v, r, False
+
     raise NotImplementedError
 
 

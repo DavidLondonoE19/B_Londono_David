@@ -95,7 +95,7 @@
   <!-- TODO: link "lidar_link" (cilindro) con dimensiones y masa de la hoja de datos:
        visual, collision e inertial -->
 
-  <xacro:property name="lidar_radio" value="0.0725"/>
+  <xacro:property name="lidar_radio" value="0.038"/>
   <xacro:property name="lidar_ancho" value="0.041"/>
   <xacro:property name="lidar_masa" value="0.190"/>
 
@@ -145,6 +145,11 @@
           <resolution>0.01</resolution>
         </range>
         <!-- TODO: ruido gaussiano, media 0, desviación 0.01 m -->
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
       </lidar>
     </sensor>
   </gazebo>
